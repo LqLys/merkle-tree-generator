@@ -14,10 +14,16 @@ fs.createReadStream('source_file.csv')
         const tree = new MerkleTree(leaves.map(a => a.leaf), keccak256, {sort: true})
         const root = tree.getHexRoot();
 
-        const proofs = leaves.map(l => ({wallet: l.wallet, proof: tree.getHexProof(l.leaf)}))
+        const proofs = leaves.map(l => ({wallet: l.wallet.toLowerCase(), proof: tree.getHexProof(l.leaf)}))
+        const proofsObject = {};
+        for (const leaf of proofs) {
+            proofsObject[leaf.wallet] = leaf.proof
+        }
+
 
         saveToFile('proofs.json', proofs)
         console.log(`merle root: ${root}`)
+        saveToFile('proofsObject.json', proofsObject)
 
 
     });
